@@ -1,0 +1,28 @@
+-- my tasks completed
+select top 1000
+	t.TaskName,
+	t.CreatedByName,
+	s.StaffName,
+	s.StaffTeamID,
+	ti.DateCompleted,
+	t.GroupID,
+	concat ('domain/path/?task=', t.Taskid, '&client=', t.Clientid)[TaskLink]
+from CS.dbo.Tasks t
+inner join CS.dbo.Staff s
+on s.StaffID = t.AssignedTo
+CROSS APPLY CS.dbo.fn_TaskInfo(t.TaskID) ti
+where s.StaffName = 'Jonathan Moore'
+and ti.DateCompleted is not null
+and ti.DateCompleted >= '2019-10-22 00:00:00.000'
+order by ti.DateCompleted DESC
+
+--Example of group by
+select pin.InsuranceID,
+	min(pin.Insurance) as Insurance,
+	min(pin.InsuranceType) as InsuranceType
+from systems.dbo.PhysicianInsurance pin
+join systems.dbo.PhysicianPhysInsurance ppin 
+	on pin.InsuranceID = ppin.InsuranceID
+where pin.ProjectID = 26434
+group by pin.InsuranceID
+order by pin.InsuranceID
