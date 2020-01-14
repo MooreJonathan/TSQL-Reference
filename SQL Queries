@@ -7,10 +7,10 @@ select top 1000
 	ti.DateCompleted,
 	t.GroupID,
 	concat ('domain/path/?task=', t.Taskid, '&client=', t.Clientid)[TaskLink]
-from CS.dbo.Tasks t
-inner join CS.dbo.Staff s
+from db.Tasks t
+inner join db.Staff s
 on s.StaffID = t.AssignedTo
-CROSS APPLY CS.dbo.fn_TaskInfo(t.TaskID) ti
+CROSS APPLY db.fn_TaskInfo(t.TaskID) ti
 where s.StaffName = 'Jonathan Moore'
 and ti.DateCompleted is not null
 and ti.DateCompleted >= '2019-10-22 00:00:00.000'
@@ -20,8 +20,8 @@ order by ti.DateCompleted DESC
 select pin.InsuranceID,
 	min(pin.Insurance) as Insurance,
 	min(pin.InsuranceType) as InsuranceType
-from systems.dbo.PhysicianInsurance pin
-join systems.dbo.PhysicianPhysInsurance ppin 
+from db.PhysicianInsurance pin
+join db.PhysicianPhysInsurance ppin 
 	on pin.InsuranceID = ppin.InsuranceID
 where pin.ProjectID = 26434
 group by pin.InsuranceID
